@@ -66,7 +66,7 @@ public class IntegrationTestDriver implements Driver {
 
 	@Override
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		return logger;
+		return com.github.hm1rafael.logger.Logger.getLogger();
 	}
 
 }

@@ -31,32 +31,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.yaml.snakeyaml.Yaml;
+
+import com.github.hm1rafael.mapper.ValueSqlMapper;
+
 public class IntegrationTestPreparedStatement implements PreparedStatement, CallableStatement {
 	
-	private List<Properties> properties;
-	private InputStream stream;
+	private ValueSqlMapper valueSqlMapper;
 	private String sql;
 	
 	public IntegrationTestPreparedStatement(File resultsSetFile) {
-		FileInputStream stream = null;
-		try {
-			if (resultsSetFile.isDirectory()) {
-				File[] listFiles = resultsSetFile.listFiles();
-				for (File properties : listFiles) {
-				}
-			} else {
-				stream = new FileInputStream(resultsSetFile);
-				
-			}
-		} catch (FileNotFoundException e) {
-			throw new IllegalArgumentException("problems loading result set file", e);
-		} finally {
-			try {
-				stream.close();
-			} catch (IOException e) {
-				//Nothng
-			}
+		if (resultsSetFile.isDirectory()) {
+			this.valueSqlMapper.add(resultsSetFile.listFiles());
+		} else {
+			this.valueSqlMapper.add(resultsSetFile);
 		}
+		
 	}
 	
 	public IntegrationTestPreparedStatement(String sql, File resultsSetFile) {
