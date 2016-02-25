@@ -7,15 +7,20 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.hm1rafael.connection.IntegrationTestConnection;
+import com.github.hm1rafael.mapper.ValueSqlMapper;
+import com.github.hm1rafael.mapper.impl.LocalYamlValueSqlMapperImpl;
 
 public class IntegrationTestDriver implements Driver {
 
 	private static Logger logger = Logger.getLogger(IntegrationTestDriver.class.getName());
+
+	private Map map;
 	
 	static {
 		IntegrationTestDriver driver = new IntegrationTestDriver();
@@ -28,12 +33,16 @@ public class IntegrationTestDriver implements Driver {
 	
 	@Override
 	public Connection connect(String url, Properties info) throws SQLException {
-		File resultsFile = getResultsFile(url);
-		return new IntegrationTestConnection(resultsFile);
+		if (this.map == null) {
+			UrlInformation urlInformation = extractInformationFromUrl(url);
+			ValueSqlMapper valueSqlMapper = findImplementationBasedOnTheProtocol(urlInformation.protocol);
+			valueSqlMapper.load(urlInformation.urlPath);
+		}
+		return new IntegrationTestConnection(this.map);
 	}
 
-	private File getResultsFile(String url) {
-		return new File(url); //TODO: get the name of the file from url
+	private ValueSqlMapper findImplementationBasedOnTheProtocol(String protocol) {
+		return new LocalYamlValueSqlMapperImpl();
 	}
 
 	@Override
@@ -68,5 +77,24 @@ public class IntegrationTestDriver implements Driver {
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
 		return com.github.hm1rafael.logger.Logger.getLogger();
 	}
+	
+	private UrlInformation extractInformationFromUrl(String url) {
+		UrlInformation urlInformation = new UrlInformation();
+		urlInformation.protocol = "yaml";
+		urlInformation.urlPath = "test";
+		return urlInformation;
+	}
+	
+	private class UrlInformation {
+		
+		public UrlInformation() {
+
+		}
+		
+		private String protocol;
+		private String urlPath;
+		
+	}
+	
 
 }

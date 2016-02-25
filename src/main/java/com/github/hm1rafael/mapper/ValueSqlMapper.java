@@ -1,11 +1,9 @@
 package com.github.hm1rafael.mapper;
 
-import java.io.File;
+import java.util.Map;
 
 public interface ValueSqlMapper {
 
-	void add(File[] files);
-	
-	void add(File file);
+	Map load(String url);
 	
 }
