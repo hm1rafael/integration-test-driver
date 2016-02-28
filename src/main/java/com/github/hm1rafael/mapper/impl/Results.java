@@ -1,11 +1,11 @@
-package com.github.hm1rafael.set;
+package com.github.hm1rafael.mapper.impl;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-class Results {
+public class Results {
 
 	private LinkedList<Row> rows = new LinkedList<>(); 
 	

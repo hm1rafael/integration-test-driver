@@ -13,8 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.hm1rafael.connection.IntegrationTestConnection;
-import com.github.hm1rafael.mapper.ValueSqlMapper;
-import com.github.hm1rafael.mapper.impl.LocalYamlValueSqlMapperImpl;
+import com.github.hm1rafael.mapper.ValueSqlLoader;
+import com.github.hm1rafael.mapper.impl.LocalYamlValueSqlLoader;
+import com.github.hm1rafael.mapper.impl.LocalYamlValueSqlLoaderTest;
 
 public class IntegrationTestDriver implements Driver {
 
@@ -35,14 +36,14 @@ public class IntegrationTestDriver implements Driver {
 	public Connection connect(String url, Properties info) throws SQLException {
 		if (this.map == null) {
 			UrlInformation urlInformation = extractInformationFromUrl(url);
-			ValueSqlMapper valueSqlMapper = findImplementationBasedOnTheProtocol(urlInformation.protocol);
+			ValueSqlLoader valueSqlMapper = findImplementationBasedOnTheProtocol(urlInformation.protocol);
 			valueSqlMapper.load(urlInformation.urlPath);
 		}
 		return new IntegrationTestConnection(this.map);
 	}
 
-	private ValueSqlMapper findImplementationBasedOnTheProtocol(String protocol) {
-		return new LocalYamlValueSqlMapperImpl();
+	private ValueSqlLoader findImplementationBasedOnTheProtocol(String protocol) {
+		return new LocalYamlValueSqlLoader();
 	}
 
 	@Override

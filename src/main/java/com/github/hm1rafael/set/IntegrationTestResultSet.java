@@ -22,6 +22,8 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 
+import com.github.hm1rafael.mapper.impl.Results;
+
 public class IntegrationTestResultSet implements ResultSet {
 
 	private Results results;

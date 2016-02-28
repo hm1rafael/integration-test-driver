@@ -3,12 +3,14 @@ package com.github.hm1rafael.mapper.impl;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
-import com.github.hm1rafael.mapper.ValueSqlMapper;
+import com.github.hm1rafael.mapper.ValueSqlLoader;
 
-public class LocalYamlValueSqlMapperImpl implements ValueSqlMapper {
+public class LocalYamlValueSqlLoader implements ValueSqlLoader {
 
 	private Map loadFiles(File file, Map mapper) {
 		if (!file.isDirectory()) {
@@ -27,14 +29,28 @@ public class LocalYamlValueSqlMapperImpl implements ValueSqlMapper {
 			YamlReader y = new YamlReader(reader);
 			return (Map) y.read();
 		} catch (Exception e) {
-			throw new IllegalStateException("Fail to load data");
+			throw new IllegalStateException("Fail to load data", e);
 		}
 	}
 
 	@Override
-	public Map load(String path) {
+	public SqlResultsHolder load(String path) {
 		File file = new File(path);
-		return loadFiles(file, new HashMap<>());
+		Map loadFiles = loadFiles(file, new HashMap<>());
+		Set entrySet = loadFiles.entrySet();
+		for (Object object : entrySet) {
+			Map.Entry entry = (Map.Entry) object;
+			List<Map<String,String>> mappings = (List<Map<String,String>>) entry.getValue();
+			for (Map<String,String> mapping : mappings) {
+				Set<String> parametersSet = mapping.keySet();
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public String getProtocolo() {
+		return null;
 	}
 
 }
